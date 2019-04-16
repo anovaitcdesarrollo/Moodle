@@ -24,7 +24,8 @@ function get_setup_params_from_configs_json
     export glusterNode=$(echo $json | jq -r .fileServerProfile.glusterVmName)
     export glusterVolume=$(echo $json | jq -r .fileServerProfile.glusterVolName)
     export siteFQDN=$(echo $json | jq -r .siteProfile.siteURL)
-    export httpsTermination=$(echo $json | jq -r .siteProfile.httpsTermination)
+    #export httpsTermination=$(echo $json | jq -r .siteProfile.httpsTermination)
+    export httpsTermination="VMSS"
     export dbIP=$(echo $json | jq -r .dbServerProfile.fqdn)
     export moodledbname=$(echo $json | jq -r .moodleProfile.dbName)
     export moodledbuser=$(echo $json | jq -r .moodleProfile.dbUser)
