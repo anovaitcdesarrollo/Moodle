@@ -24,6 +24,8 @@
 
 set -ex
 
+echo "Installing from anovaitcdesarrollo github"
+
 moodle_on_azure_configs_json_path=${1}
 
 . ./helper_functions.sh
