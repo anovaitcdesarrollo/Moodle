@@ -263,9 +263,9 @@ EOF
     if [ "$httpsTermination" != "None" ]; then
       cat <<EOF >> /etc/nginx/sites-enabled/${siteFQDN}.conf
         # Redirect to https
-        #if (\$http_x_forwarded_proto != https) {
-        #        return 301 https://\$server_name\$request_uri;
-        #}
+        if (\$http_x_forwarded_proto != https) {
+                return 301 https://\$server_name\$request_uri;
+        }
         rewrite ^/(.*\.php)(/)(.*)$ /\$1?file=/\$3 last;
 EOF
     fi
@@ -319,11 +319,11 @@ EOF
     if [ "$httpsTermination" != "None" ]; then
       cat <<EOF >> /etc/apache2/sites-enabled/${siteFQDN}.conf
     # Redirect unencrypted direct connections to HTTPS
-    #<IfModule mod_rewrite.c>
-    #  RewriteEngine on
-    #  RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
-    #  RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [L,R=301]
-    #</IFModule>
+    <IfModule mod_rewrite.c>
+      RewriteEngine on
+      RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+      RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [L,R=301]
+    </IFModule>
 EOF
     fi
     cat <<EOF >> /etc/apache2/sites-enabled/${siteFQDN}.conf
