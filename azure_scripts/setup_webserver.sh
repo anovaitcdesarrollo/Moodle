@@ -655,5 +655,15 @@ EOF
   sudo locale-gen es_ES.UTF-8
   sudo update-locale LANG=es_ES.UTF-8
   
+  # Cron for dayly nginx reload
+  local CRON_RELOAD_NGINX="/etc/cron.d/reload-nginx"
+  cat <<EOF > ${CRON_RELOAD_NGINX}
+* 4 * * * root /etc/init.d/nginx reload
+EOF
+  chmod 644 ${CRON_RELOAD_NGINX}  
+  
+    
+  
+  
 
 }  > /tmp/setup.log
