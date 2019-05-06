@@ -656,11 +656,10 @@ EOF
   sudo update-locale LANG=es_ES.UTF-8
   
   # Cron for dayly nginx reload
-  local CRON_RELOAD_NGINX="/etc/cron.d/reload-nginx"
-  cat <<EOF > ${CRON_RELOAD_NGINX}
+  cat <<EOF > /etc/cron.d/reload-nginx
 * 4 * * * root /etc/init.d/nginx reload
 EOF
-  chmod 644 ${CRON_RELOAD_NGINX}  
+  chmod 644 /etc/cron.d/reload-nginx  
   
     
   
