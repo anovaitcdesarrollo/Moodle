@@ -657,7 +657,7 @@ EOF
   
   # Cron for dayly nginx reload
   cat <<EOF > /etc/cron.d/reload-nginx
-* 4 * * * root /etc/init.d/nginx reload
+0 4 * * * root /etc/init.d/nginx reload
 EOF
   chmod 644 /etc/cron.d/reload-nginx  
   
