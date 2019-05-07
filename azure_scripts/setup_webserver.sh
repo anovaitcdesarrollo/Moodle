@@ -317,10 +317,12 @@ EOF
 	</Directory>
 EOF
     if [ "$httpsTermination" != "None" ]; then
+      LEURLREDIR="${syslogServer//-vm-/-pubip-}.northeurope.cloudapp.azure.com"
       cat <<EOF >> /etc/apache2/sites-enabled/${siteFQDN}.conf
     # Redirect unencrypted direct connections to HTTPS
     <IfModule mod_rewrite.c>
       RewriteEngine on
+      RewriteRule /\.well-known/acme-challenge/(.*) http://${LEURLREDIR}%{REQUEST_URI} [P,L]
       RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
       RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [L,R=301]
     </IFModule>
