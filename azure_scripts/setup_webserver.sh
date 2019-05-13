@@ -301,7 +301,7 @@ EOF
   if [ "$webServerType" = "apache" ]; then
     # Configure Apache/php
     sed -i "s/Listen 80/Listen 81/" /etc/apache2/ports.conf
-    a2enmod rewrite && a2enmod remoteip && a2enmod headers
+    a2enmod rewrite && a2enmod remoteip && a2enmod headers && a2enmod proxy && a2enmod proxy_http
 
     cat <<EOF >> /etc/apache2/sites-enabled/${siteFQDN}.conf
 <VirtualHost *:81>
