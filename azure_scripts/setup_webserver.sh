@@ -86,6 +86,9 @@ check_fileServerType_param $fileServerType
     install_php_mssql_driver
   fi
 
+  # install MTA for local email sending
+  sudo apt-get -y install sendmail-bin
+
   # PHP Version
   PhpVer=$(get_php_version)
 
