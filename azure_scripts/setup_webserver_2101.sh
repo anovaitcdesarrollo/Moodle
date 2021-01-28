@@ -265,6 +265,9 @@ server {
 EOF
   fi
 
+  # ANOVA 28/01/2021 Domain HTTP Server to redirect LetsEncrypt checks
+  LEURLREDIR="${syslogServer//-vm-/-pubip-}.northeurope.cloudapp.azure.com"
+
   if [ "$webServerType" = "nginx" ]; then
     cat <<EOF >> /etc/nginx/sites-enabled/${siteFQDN}.conf
 server {
@@ -287,6 +290,12 @@ server {
 EOF
     if [ "$httpsTermination" != "None" ]; then
       cat <<EOF >> /etc/nginx/sites-enabled/${siteFQDN}.conf
+
+        # ANOVA 28/01/2021 Redirect LetsEncrypt HTTP challenge
+        location /.well-known/acme-challenge {
+            return 301 https://\$LEURLREDIR\$request_uri;
+        }
+      
         # Redirect to https
         if (\$http_x_forwarded_proto != https) {
                 return 301 https://\$server_name\$request_uri;
@@ -343,8 +352,6 @@ EOF
 	</Directory>
 EOF
     if [ "$httpsTermination" != "None" ]; then
-      # ANOVA 28/01/2021
-      LEURLREDIR="${syslogServer//-vm-/-pubip-}.northeurope.cloudapp.azure.com"
       cat <<EOF >> /etc/apache2/sites-enabled/${siteFQDN}.conf
     # Redirect unencrypted direct connections to HTTPS
     <IfModule mod_rewrite.c>
