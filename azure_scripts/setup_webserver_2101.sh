@@ -293,7 +293,7 @@ EOF
 
         # ANOVA 28/01/2021 Redirect LetsEncrypt HTTP challenge
         location /.well-known/acme-challenge {
-            return 301 https://\$LEURLREDIR\$request_uri;
+            return 301 https://${LEURLREDIR}\$request_uri;
         }
       
         # Redirect to https
