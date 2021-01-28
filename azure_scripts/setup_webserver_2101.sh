@@ -104,7 +104,10 @@ check_fileServerType_param $fileServerType
     install_php_mssql_driver
     
   fi
-   
+
+  # ANOVA 28/01/2021 Install MTA for local email sending
+  sudo apt-get -y install sendmail-bin
+
   # PHP Version
   PhpVer=$(get_php_version)
 
@@ -323,7 +326,8 @@ EOF
   if [ "$webServerType" = "apache" ]; then
     # Configure Apache/php
     sed -i "s/Listen 80/Listen 81/" /etc/apache2/ports.conf
-    a2enmod rewrite && a2enmod remoteip && a2enmod headers
+    # ANOVA 28/01/2021 Add proxy and proxy_http modules
+    a2enmod rewrite && a2enmod remoteip && a2enmod headers && a2enmod proxy && a2enmod proxy_http
 
     cat <<EOF >> /etc/apache2/sites-enabled/${siteFQDN}.conf
 <VirtualHost *:81>
@@ -339,10 +343,14 @@ EOF
 	</Directory>
 EOF
     if [ "$httpsTermination" != "None" ]; then
+      # ANOVA 28/01/2021
+      LEURLREDIR="${syslogServer//-vm-/-pubip-}.northeurope.cloudapp.azure.com"
       cat <<EOF >> /etc/apache2/sites-enabled/${siteFQDN}.conf
     # Redirect unencrypted direct connections to HTTPS
     <IfModule mod_rewrite.c>
       RewriteEngine on
+      # ANOVA 28/01/2021
+      RewriteRule /\.well-known/acme-challenge/(.*) http://${LEURLREDIR}%{REQUEST_URI} [P,L]
       RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
       RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [L,R=301]
     </IFModule>
@@ -681,5 +689,17 @@ EOF
   # Restart Varnish
   systemctl daemon-reload
   service varnish restart
+  
+  # ANOVA 28/01/2021 Set Spanish Locale
+  sudo locale-gen es_ES.UTF-8
+  sudo update-locale LANG=es_ES.UTF-8
+  
+  # ANOVA 28/01/2021 Cron for dayly nginx reload
+  cat <<EOF > /etc/cron.d/reload-nginx
+0 4 * * * root /etc/init.d/nginx reload
+EOF
+  chmod 644 /etc/cron.d/reload-nginx 
+  
+  
 
 }  > /tmp/setup.log
