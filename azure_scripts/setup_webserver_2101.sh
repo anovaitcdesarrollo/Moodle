@@ -111,6 +111,9 @@ check_fileServerType_param $fileServerType
   # ANOVA 28/01/2021 Set Spanish Locale
   sudo locale-gen es_ES.UTF-8
   sudo update-locale LANG=es_ES.UTF-8
+  
+  # ANOVA 22/02/2021 Set hostname
+  sudo hostnamectl set-hostname ${siteFQDN}  
 
   # PHP Version
   PhpVer=$(get_php_version)
