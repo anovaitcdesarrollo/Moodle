@@ -108,6 +108,10 @@ check_fileServerType_param $fileServerType
   # ANOVA 28/01/2021 Install MTA for local email sending
   sudo apt-get -y install sendmail-bin
 
+  # ANOVA 28/01/2021 Set Spanish Locale
+  sudo locale-gen es_ES.UTF-8
+  sudo update-locale LANG=es_ES.UTF-8
+
   # PHP Version
   PhpVer=$(get_php_version)
 
@@ -696,10 +700,6 @@ EOF
   # Restart Varnish
   systemctl daemon-reload
   service varnish restart
-  
-  # ANOVA 28/01/2021 Set Spanish Locale
-  sudo locale-gen es_ES.UTF-8
-  sudo update-locale LANG=es_ES.UTF-8
   
   # ANOVA 28/01/2021 Cron for dayly nginx reload
   cat <<EOF > /etc/cron.d/reload-nginx
